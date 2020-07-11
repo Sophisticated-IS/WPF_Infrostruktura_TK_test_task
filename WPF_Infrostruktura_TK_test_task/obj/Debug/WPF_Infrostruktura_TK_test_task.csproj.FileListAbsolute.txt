@@ -12,3 +12,4 @@ C:\Users\Sova IS\source\repos\WPF_Infrostruktura_TK_test_task\WPF_Infrostruktura
 C:\Users\Sova IS\source\repos\WPF_Infrostruktura_TK_test_task\WPF_Infrostruktura_TK_test_task\obj\Debug\WPF_Infrostruktura_TK_test_task.csproj.GenerateResource.cache
 C:\Users\Sova IS\source\repos\WPF_Infrostruktura_TK_test_task\WPF_Infrostruktura_TK_test_task\obj\Debug\WPF_Infrostruktura_TK_test_task.exe
 C:\Users\Sova IS\source\repos\WPF_Infrostruktura_TK_test_task\WPF_Infrostruktura_TK_test_task\obj\Debug\WPF_Infrostruktura_TK_test_task.pdb
+C:\Users\Sova IS\source\repos\WPF_Infrostruktura_TK_test_task\WPF_Infrostruktura_TK_test_task\obj\Debug\GeneratedInternalTypeHelper.g.cs

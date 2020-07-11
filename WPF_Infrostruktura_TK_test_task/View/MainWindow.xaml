@@ -4,8 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_Infrostruktura_TK_test_task"
+        xmlns:viewmodels="clr-namespace:WPF_Infrostruktura_TK_test_task.ViewModels"
         mc:Ignorable="d"
         Title="Choose necesssary variables ☟"  Height="450" Width="800">
+    
+    <Window.DataContext>
+        <viewmodels:VariableViewModels/>
+    </Window.DataContext>
+    
     <Window.Resources>
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="16"/>
@@ -36,7 +42,7 @@
             <Grid Grid.Column="0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="auto">
                     <Label Content="Group"/>
-                    <TextBox/>
+                    <TextBox Text="{Binding FilterGroup, UpdateSourceTrigger=PropertyChanged }"/>
 
                     <Label Content="Name" Margin="30,0,0,0" />
                     <TextBox/>
@@ -58,7 +64,7 @@
                 </Grid>
 
                 <Grid Grid.Column="1"  Margin="0,0,3,0">
-                    <RichTextBox MaxHeight="200"  />
+                    <RichTextBox MaxHeight="200"/>
                 </Grid>
 
             </Grid>
@@ -66,7 +72,13 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <DataGrid Background="#FFE8D28F"/>
+            <DataGrid Background="#FFE8D28F" FontSize="16" ItemsSource="{Binding Items}"  AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Группа" Binding="{Binding Group}"/>
+                    <DataGridTextColumn Header="Переменная" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Описание" Binding="{Binding Description}"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
         
         <Grid Grid.Row="2">
