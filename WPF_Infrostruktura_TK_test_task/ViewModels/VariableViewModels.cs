@@ -18,23 +18,57 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
             get { return (string)GetValue(FilterTextProperty); }
             set { SetValue(FilterTextProperty, value); }
         }
-        public string FilterName
-        {
-            get { return (string)GetValue(FilterTextProperty); }
-            set { SetValue(FilterTextProperty, value); }
-        }
 
         // Using a DependencyProperty as the backing store for FilterVariables.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FilterTextProperty =
-            DependencyProperty.Register("FilterVariables", typeof(string), typeof(VariableViewModels), new PropertyMetadata("",FilterText_Changed));
+            DependencyProperty.Register("FilterVariables", typeof(string), typeof(VariableViewModels), new PropertyMetadata("",FilterGroup_Changed));
 
-        private static void FilterText_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void FilterGroup_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var current = d as VariableViewModels;
-            if (current !=null)
+            if (d is VariableViewModels current)
             {
                 current.Items.Filter = null;
                 current.Items.Filter = current.FilterVariables_by_Group;
+            }
+        }
+
+        public string FilterName
+        {
+            get { return (string)GetValue(FilterNameProperty); }
+            set { SetValue(FilterNameProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FilterName.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FilterNameProperty =
+            DependencyProperty.Register("FilterName", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterName_Changed));
+
+        private static void FilterName_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is VariableViewModels current)
+            {
+                current.Items.Filter = null;
+                current.Items.Filter = current.FilterVariables_by_Name;
+            }
+        }
+
+
+
+        public string FilterDescription
+        {
+            get { return (string)GetValue(FilterDescriptionProperty); }
+            set { SetValue(FilterDescriptionProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FilterDescription.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FilterDescriptionProperty =
+            DependencyProperty.Register("FilterDescription", typeof(string), typeof(VariableViewModels), new PropertyMetadata("",FilterDescription_Changed));
+
+        private static void FilterDescription_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is VariableViewModels current)
+            {
+                current.Items.Filter = null;
+                current.Items.Filter = current.FilterVariables_by_Description;
             }
         }
 
@@ -56,16 +90,15 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
 
         private bool FilterVariables_by_Group(object obj)
         {
-            Variable_with_group current_var_with_gr = obj as Variable_with_group;
-
-            if (!string.IsNullOrEmpty(FilterGroup) && current_var_with_gr!= null && !current_var_with_gr.Group.Contains(FilterGroup))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return !string.IsNullOrEmpty(FilterGroup) && obj is Variable_with_group current_var_with_gr && !current_var_with_gr.Group.Contains(FilterGroup) ? false : true;
+        }
+        private bool FilterVariables_by_Name(object obj)
+        {
+           return !string.IsNullOrEmpty(FilterName) && obj is Variable_with_group current_var_with_gr && !current_var_with_gr.Name.Contains(FilterName) ? false : true;
+        }
+        private bool FilterVariables_by_Description(object obj)
+        {
+            return !string.IsNullOrEmpty(FilterDescription) && obj is Variable_with_group current_var_with_gr && !current_var_with_gr.Description.Contains(FilterDescription) ? false : true;
         }
     }
 }
