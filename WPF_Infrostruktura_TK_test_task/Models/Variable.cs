@@ -55,7 +55,7 @@ namespace WPF_Infrostruktura_TK_test_task.Models
                     new GroupsList { group_name ="Houses",list_variables = Houses}
                 };
             
-            const int groups_number = 20;
+            const int groups_number = 10;
             const int vars_in_group = 1000;
             const int max_description_length = 3000;
             const int max_var_length = 30;
@@ -75,7 +75,7 @@ namespace WPF_Infrostruktura_TK_test_task.Models
 
             var vars_with_group = new List<Variable_with_group>(100 * 1000); //TODO:Список всех переменных с именами их групп  100 групп по 1000 переменных
            
-            foreach (var group in groups_list)//TODO избавиться бы от вложенности циклов
+            foreach (var group in groups_list)
             {
                 foreach (var variable in group.list_variables)
                 {

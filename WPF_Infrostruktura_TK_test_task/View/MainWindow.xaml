@@ -72,13 +72,10 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="125*"/>
-                <ColumnDefinition Width="669*"/>
-            </Grid.ColumnDefinitions>
-            <DataGrid Background="#FFE8D28F"   FontSize="16"  EnableRowVirtualization="True" ScrollViewer.IsDeferredScrollingEnabled="True" 
-                      ItemsSource="{Binding Items}"  AutoGenerateColumns="False" Grid.ColumnSpan="2" 
-                      IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False">
+ 
+            <DataGrid Background="#FFE8D28F" SelectionUnit="FullRow" FontSize="16"  EnableRowVirtualization="True" ScrollViewer.IsDeferredScrollingEnabled="True" 
+                      ItemsSource="{Binding Items}" SelectedIndex="{Binding Index}" AutoGenerateColumns="False"
+                      IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" SelectionMode="Extended">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Группа" Binding="{Binding Group,IsAsync=True,Mode=OneWay,FallbackValue=Loading...}"/>
                     <DataGridTextColumn Header="Переменная" Binding="{Binding Name,IsAsync=True,Mode=OneWay,FallbackValue=Loading...}"/>
@@ -88,7 +85,7 @@
         </Grid>
 
         <Grid Grid.Row="2">
-            <Button Content="SEND VARIABLES to DB!!!" FontWeight="Black" Width="150" Height="30" Background="Orange"/>
+            <Button Command="{Binding Click_send_vars}" Content="SEND VARIABLES to DB!!!" FontWeight="Black" Width="150" Height="30" Background="Orange"/>
         </Grid>
     </Grid>
 </Window>

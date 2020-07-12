@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ using WPF_Infrostruktura_TK_test_task.View;
 
 namespace WPF_Infrostruktura_TK_test_task.ViewModels
 {
-    class VariableViewModels : DependencyObject
+    class VariableViewModels : DependencyObject, INotifyPropertyChanged
     {
 
         public string FilterGroup
@@ -74,7 +75,7 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
                 {
                     Thread.Sleep(300);//TODO эмпирическая задержка между нажатиями по клаве
                     d.Dispatcher.Invoke(() =>
-                    {                       
+                    {
                         if (d is VariableViewModels current)
                         {
                             if (token.IsCancellationRequested)
@@ -103,7 +104,7 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
                 }
                 token_source = new CancellationTokenSource();//новый источник токенов
                 token = token_source.Token;//новый токен
-               
+
                 task_FilterDescription = new Task(action_FilterDescription, token);
                 task_FilterDescription.Start();
             }
@@ -162,5 +163,43 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
         {
             return source_str?.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
         }
+
+
+        //public string Selected_Indexes { get; set; }
+       
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public void OnPropertyChanged([CallerMemberName]string prop = "")
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+
+            }
+
+            private int index;
+
+            public int Index
+            {
+                get { return index; }
+                set
+                {
+                    index = value;
+                    OnPropertyChanged();
+                }
+
+            }
+
+            public ICommand Click_send_vars
+            {
+                get
+                {
+                    return new DelegateCommand((obj) =>
+                    {
+                        MessageBox.Show(index.ToString());
+                    });
+                }
+            }
+            
+        }
     }
-}
+
+   
