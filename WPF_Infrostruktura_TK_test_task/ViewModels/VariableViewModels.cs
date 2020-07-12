@@ -4,10 +4,12 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 using WPF_Infrostruktura_TK_test_task.Models;
 using WPF_Infrostruktura_TK_test_task.View;
 
@@ -25,7 +27,6 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
         // Using a DependencyProperty as the backing store for FilterVariables.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FilterTextProperty =
             DependencyProperty.Register("FilterVariables", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterGroup_Changed));
-
         private static void FilterGroup_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is VariableViewModels current)
@@ -64,13 +65,57 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
         public static readonly DependencyProperty FilterDescriptionProperty =
             DependencyProperty.Register("FilterDescription", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterDescription_Changed));
 
-        private static void FilterDescription_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static CancellationTokenSource token_source;
+        private static CancellationToken token;
+        private static Task task_FilterDescription;
+        private async static void FilterDescription_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is VariableViewModels current)
+            var action_FilterDescription = new Action(() =>
+                {
+                    Thread.Sleep(300);//TODO эмпирическая задержка между нажатиями по клаве
+                    d.Dispatcher.Invoke(() =>
+                    {                       
+                        if (d is VariableViewModels current)
+                        {
+                            if (token.IsCancellationRequested)
+                            {
+                                throw new OperationCanceledException(token);
+                            }
+                            else
+                            {
+                                current.Items.Filter = null;
+                                current.Items.Filter = current.FilterVariables_by_Description;
+                            }
+                        }
+                    }, DispatcherPriority.Normal);
+                });
+
+            if (token_source != null && task_FilterDescription != null && !task_FilterDescription.IsCompleted)
             {
-                current.Items.Filter = null;
-                current.Items.Filter = current.FilterVariables_by_Description;
+                token_source.Cancel();//установим токен на отмену задачи
+                try
+                {
+                    await task_FilterDescription;//передадим управление диспатчеру, и додемся отмены задачи
+                }
+                catch (TaskCanceledException)
+                {
+                    //задача была отменена
+                }
+                token_source = new CancellationTokenSource();//новый источник токенов
+                token = token_source.Token;//новый токен
+               
+                task_FilterDescription = new Task(action_FilterDescription, token);
+                task_FilterDescription.Start();
             }
+            else//вызов был первый раз и токены еще не создавались или таски выполнились (сериализовано) друг за другом 
+            {
+                token_source = new CancellationTokenSource();//новый источник токенов
+                token = token_source.Token;//новый токен
+
+                task_FilterDescription = new Task(action_FilterDescription, token);
+                task_FilterDescription.Start();
+            }
+
         }
 
         public ICollectionView Items
@@ -105,6 +150,17 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
             //Убраны проверки на string.IsNullOrEmpty и   obj is Variable_with_group для оптимизации
             var current_var_with_gr = obj as Variable_with_group;
             return current_var_with_gr.Description.Contains(FilterDescription);
+        }
+
+        /// <summary>
+        /// Поиск без учета регистра подстроки в строке
+        /// </summary>
+        /// <param name="source_str">исходная строка</param>
+        /// <param name="pattern">подстрока</param>
+        /// <returns></returns>
+        private bool Contains_non_case_sensetive(string source_str, string pattern)
+        {
+            return source_str?.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
 }
