@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 using WPF_Infrostruktura_TK_test_task.Models;
+using WPF_Infrostruktura_TK_test_task.View;
 
 namespace WPF_Infrostruktura_TK_test_task.ViewModels
 {
-    class VariableViewModels: DependencyObject
+    class VariableViewModels : DependencyObject
     {
 
         public string FilterGroup
@@ -21,7 +24,7 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
 
         // Using a DependencyProperty as the backing store for FilterVariables.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FilterTextProperty =
-            DependencyProperty.Register("FilterVariables", typeof(string), typeof(VariableViewModels), new PropertyMetadata("",FilterGroup_Changed));
+            DependencyProperty.Register("FilterVariables", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterGroup_Changed));
 
         private static void FilterGroup_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -51,8 +54,6 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
             }
         }
 
-
-
         public string FilterDescription
         {
             get { return (string)GetValue(FilterDescriptionProperty); }
@@ -61,7 +62,7 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
 
         // Using a DependencyProperty as the backing store for FilterDescription.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FilterDescriptionProperty =
-            DependencyProperty.Register("FilterDescription", typeof(string), typeof(VariableViewModels), new PropertyMetadata("",FilterDescription_Changed));
+            DependencyProperty.Register("FilterDescription", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterDescription_Changed));
 
         private static void FilterDescription_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -85,20 +86,25 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
         public VariableViewModels()
         {
             Items = CollectionViewSource.GetDefaultView(Variable.GetVariables());
-            Items.Filter = FilterVariables_by_Group; 
+            Items.Filter = FilterVariables_by_Group;
         }
-
         private bool FilterVariables_by_Group(object obj)
         {
-            return !string.IsNullOrEmpty(FilterGroup) && obj is Variable_with_group current_var_with_gr && !current_var_with_gr.Group.Contains(FilterGroup) ? false : true;
+            //Убраны проверки на string.IsNullOrEmpty и   obj is Variable_with_group для оптимизации
+            var current_var_with_gr = obj as Variable_with_group;
+            return current_var_with_gr.Group.Contains(FilterGroup);
         }
         private bool FilterVariables_by_Name(object obj)
         {
-           return !string.IsNullOrEmpty(FilterName) && obj is Variable_with_group current_var_with_gr && !current_var_with_gr.Name.Contains(FilterName) ? false : true;
+            //Убраны проверки на string.IsNullOrEmpty и   obj is Variable_with_group для оптимизации
+            var current_var_with_gr = obj as Variable_with_group;
+            return current_var_with_gr.Name.Contains(FilterName);
         }
         private bool FilterVariables_by_Description(object obj)
         {
-            return !string.IsNullOrEmpty(FilterDescription) && obj is Variable_with_group current_var_with_gr && !current_var_with_gr.Description.Contains(FilterDescription) ? false : true;
+            //Убраны проверки на string.IsNullOrEmpty и   obj is Variable_with_group для оптимизации
+            var current_var_with_gr = obj as Variable_with_group;
+            return current_var_with_gr.Description.Contains(FilterDescription);
         }
     }
 }

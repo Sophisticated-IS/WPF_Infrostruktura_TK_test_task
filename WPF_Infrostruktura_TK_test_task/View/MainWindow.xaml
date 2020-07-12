@@ -7,24 +7,24 @@
         xmlns:viewmodels="clr-namespace:WPF_Infrostruktura_TK_test_task.ViewModels"
         mc:Ignorable="d"
         Title="Choose necesssary variables ☟"  Height="450" Width="800">
-    
+
     <Window.DataContext>
         <viewmodels:VariableViewModels/>
     </Window.DataContext>
-    
+
     <Window.Resources>
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
 
-        <Style TargetType="TextBox">
+        <Style x:Key="Group_Name_txt_box" TargetType="TextBox">
             <Setter Property="MaxLines" Value="1"/>
             <Setter Property="MinWidth" Value="100"/>
             <Setter Property="MaxWidth" Value="200"/>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MaxHeight="300"/>
@@ -33,7 +33,7 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-           
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
@@ -42,10 +42,14 @@
             <Grid Grid.Column="0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="auto">
                     <Label Content="Group"/>
-                    <TextBox Text="{Binding FilterGroup, UpdateSourceTrigger=PropertyChanged }"/>
+                    <TextBox Text="{Binding FilterGroup, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Group_Name_txt_box}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key=""/>
+                        </TextBox.InputBindings>
+                    </TextBox>
 
                     <Label Content="Name" Margin="30,0,0,0" />
-                    <TextBox Text="{Binding FilterName, UpdateSourceTrigger=PropertyChanged }"/>
+                    <TextBox Text="{Binding FilterName, UpdateSourceTrigger=PropertyChanged }" Style="{StaticResource Group_Name_txt_box}"/>
                 </StackPanel>
             </Grid>
 
@@ -54,17 +58,17 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                
+
 
                 <Grid Grid.Row="0" Grid.Column="0">
                     <Label Content="Description" />
                 </Grid>
 
                 <Grid Grid.Column="1"  Margin="0,0,3,0">
-                    <TextBox  Text="{Binding FilterDescription, UpdateSourceTrigger=PropertyChanged }" TextWrapping="Wrap" MaxHeight="200"/>
+                    <TextBox Text="{Binding FilterDescription, UpdateSourceTrigger=PropertyChanged }" TextWrapping="Wrap" MaxHeight="200"/>
                 </Grid>
 
             </Grid>
@@ -72,15 +76,19 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <DataGrid Background="#FFE8D28F" FontSize="16" ItemsSource="{Binding Items}"  AutoGenerateColumns="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="125*"/>
+                <ColumnDefinition Width="669*"/>
+            </Grid.ColumnDefinitions>
+            <DataGrid Background="#FFE8D28F" EnableRowVirtualization="True" ScrollViewer.IsDeferredScrollingEnabled="True"  FontSize="16" ItemsSource="{Binding Items}"  AutoGenerateColumns="False" Grid.ColumnSpan="2" Margin="0,0,-0.4,-0.2">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Группа" Binding="{Binding Group}"/>
-                    <DataGridTextColumn Header="Переменная" Binding="{Binding Name}"/>
-                    <DataGridTextColumn Header="Описание" Binding="{Binding Description}"/>
+                    <DataGridTextColumn Header="Группа" Binding="{Binding Group,IsAsync=True,Mode=OneWay,FallbackValue=Loading...}"/>
+                    <DataGridTextColumn Header="Переменная" Binding="{Binding Name,IsAsync=True,Mode=OneWay,FallbackValue=Loading...}"/>
+                    <DataGridTextColumn Header="Описание" Binding="{Binding Description,IsAsync=True,Mode=OneWay,FallbackValue=Loading...}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        
+
         <Grid Grid.Row="2">
             <Button Content="SEND VARIABLES to DB!!!" FontWeight="Black" MaxWidth="200" Background="AliceBlue"/>
         </Grid>
