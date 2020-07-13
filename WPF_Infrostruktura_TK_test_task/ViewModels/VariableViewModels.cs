@@ -30,7 +30,7 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
 
         // Using a DependencyProperty as the backing store for FilterVariables.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FilterTextProperty =
-            DependencyProperty.Register("FilterVariables", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterGroup_Changed));
+            DependencyProperty.Register("FilterGroup", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterGroup_Changed));
         private static void FilterGroup_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is VariableViewModels current)
@@ -83,7 +83,7 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
                         {
                             if (token.IsCancellationRequested)
                             {
-                               throw new OperationCanceledException(token);
+                                throw new OperationCanceledException(token);
                             }
                             else
                             {
@@ -167,9 +167,6 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
             return source_str?.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-
-        //public string Selected_Indexes { get; set; }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void OnPropertyChanged([CallerMemberName]string prop = "")
@@ -177,19 +174,10 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
-        private Variable_with_group curr_variable;
+        private Variable_with_group curr_variable;//текущая переменная выбранная в datagrid
 
-        private ObservableCollection<Variable_with_group> list_selected_vars = new ObservableCollection<Variable_with_group>();
+        public ObservableCollection<Variable_with_group> List_selected_vars { get; } = new ObservableCollection<Variable_with_group>();
 
-        public ObservableCollection<Variable_with_group> List_selected_vars
-        {
-            get
-            {
-                return list_selected_vars;
-            }
-   
-        }
-       
         public Variable_with_group Selected_Variable
         {
             get { return curr_variable; }
@@ -197,14 +185,14 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
             {
                 curr_variable = value;
 
-                if (!list_selected_vars.Contains(value) && value!= null)
+                if (!List_selected_vars.Contains(value) && value != null)
                 {
-                    list_selected_vars.Add(value);
+                    List_selected_vars.Add(value);
                 }
                 else;//данная переменная уже в списке присутсвует
             }
         }
-        public  int Selected_Variable_Index { get; set; }
+        public int Selected_Variable_Index { get; set; }
 
         public ICommand Click_send_vars
         {
@@ -214,11 +202,11 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
                 {
                     string all_vars = "";
                     string no_vars_msg = "Нечего отправлять в БД, выберите пожалуйста переменные из таблицы!";
-                    foreach (var item in list_selected_vars)
+                    foreach (var item in List_selected_vars)
                     {
                         all_vars += $"{item.Group} - {item.Name}\n";//TODO: надо ли выводить описание (Message box не справляется с такой длинной строкой)?
                     }
-                    
+
                     if (string.IsNullOrEmpty(all_vars))
                     {
                         MessageBox.Show(no_vars_msg);
@@ -227,7 +215,7 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
                     {
                         MessageBox.Show(all_vars);
                     }
-                    
+
                 });
             }
         }
@@ -238,9 +226,9 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
             {
                 return new DelegateCommand((obj) =>
                 {
-                    if (list_selected_vars.Count > 0 && Selected_Variable_Index >= 0)
+                    if (List_selected_vars.Count > 0 && Selected_Variable_Index >= 0)
                     {
-                        list_selected_vars.RemoveAt(Selected_Variable_Index);
+                        List_selected_vars.RemoveAt(Selected_Variable_Index);
                     }
                 });
             }

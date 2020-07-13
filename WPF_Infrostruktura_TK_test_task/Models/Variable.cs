@@ -54,39 +54,40 @@ namespace WPF_Infrostruktura_TK_test_task.Models
                     new GroupsList { group_name ="Cars",list_variables = Cars},
                     new GroupsList { group_name ="Houses",list_variables = Houses}
                 };
-            
-            const int groups_number = 10;
-            const int vars_in_group = 1000;
+
+            const int max_groups_number = 100;
+            const int max_vars_in_group = 1000;
             const int max_description_length = 3000;
             const int max_var_length = 30;
 
-            for (int i = 1; i <= groups_number; i++)//группы
+            for (int i = 1; i <= max_groups_number; i++)//группы
             {
                 var list_vars = new List<Variable>();
                 var group = $"Group - {i} {RandomString(max_var_length)}";
-                for (int j = 0; j < vars_in_group; j++)//переменные
+                for (int j = 0; j < max_vars_in_group; j++)//переменные
                 {
                     string name = $"{RandomString(max_var_length)} - ";
                     string description = RandomString(max_description_length);
-                    list_vars.Add(new Variable { Name = name, Description = description });                    
+                    list_vars.Add(new Variable { Name = name, Description = description });
                 }
                 groups_list.Add(new GroupsList { group_name = group, list_variables = list_vars });
             }
 
             var vars_with_group = new List<Variable_with_group>(100 * 1000); //TODO:Список всех переменных с именами их групп  100 групп по 1000 переменных
-           
+
             foreach (var group in groups_list)
             {
                 foreach (var variable in group.list_variables)
                 {
-                    vars_with_group.Add(new Variable_with_group 
-                    { Group = group.group_name, 
-                      Name = variable.Name,
-                      Description = variable.Description 
+                    vars_with_group.Add(new Variable_with_group
+                    {
+                        Group = group.group_name,
+                        Name = variable.Name,
+                        Description = variable.Description
                     });
-                }                
+                }
             }
-            
+
             return vars_with_group;
         }
     }
