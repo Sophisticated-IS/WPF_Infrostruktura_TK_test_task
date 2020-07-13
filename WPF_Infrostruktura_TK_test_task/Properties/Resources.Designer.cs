@@ -59,15 +59,5 @@ namespace WPF_Infrostruktura_TK_test_task.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon arrow_left_double {
-            get {
-                object obj = ResourceManager.GetObject("arrow_left_double", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
     }
 }

@@ -104,27 +104,23 @@
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0">
-                            <Button Command="{Binding Click_send_vars}" Content="SEND" FontWeight="Black" Width="150" Height="30" BorderThickness="0">
-                                <Button.Background>
-                                    <RadialGradientBrush>
-                                        <GradientStop Color="#FFD7E4F2" Offset="0.821"/>
-                                        <GradientStop Color="White"/>
-                                        <GradientStop Color="#FEDF9837" Offset="0.608"/>
-                                    </RadialGradientBrush>
-                                </Button.Background>
+                            <Button Command="{Binding Click_send_vars}" Background="Transparent" FontWeight="Black" Width="150" Height="30" BorderThickness="0">
+                                <Button.Content>
+                                    <Image Source="download_database.ico" />
+                                </Button.Content>
                             </Button>
                         </Grid>
 
                         <Grid Grid.Row="1">
-                            <ListView Background="AliceBlue" BorderThickness="0" ItemsSource="{Binding List_selected_vars,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
+                            <ListView Background="AliceBlue" BorderThickness="0" ItemsSource="{Binding List_selected_vars}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <!--<Button MinWidth="10" BorderThickness="0" Command="{Binding Click_remove_var_from_list}" Background="Transparent">
+                                            <Button MinWidth="10" BorderThickness="0"  Background="Transparent">
                                                 <Button.Content>
-                                                    <Image   Source="/Resources/arrow_left_double.ico" />
+                                                    <Image    MaxHeight="20" Source="arrow_left_double.ico"/>
                                                 </Button.Content>
-                                            </Button>-->
+                                            </Button>
                                             <Label Content="{Binding Group,Mode=OneWay }"/>
                                             <Label Content="{Binding Name,Mode=OneWay }"/>
                                         </StackPanel>

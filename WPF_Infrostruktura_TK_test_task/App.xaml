@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:WPF_Infrostruktura_TK_test_task"
              StartupUri="View\MainWindow.xaml">
     <Application.Resources>
-         
+        
     </Application.Resources>
 </Application>

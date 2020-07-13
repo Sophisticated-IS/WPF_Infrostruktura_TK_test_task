@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -178,9 +179,9 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
 
         private Variable_with_group curr_variable;
 
-        private List<Variable_with_group> list_selected_vars = new List<Variable_with_group>();
+        private ObservableCollection<Variable_with_group> list_selected_vars = new ObservableCollection<Variable_with_group>();
 
-        public List<Variable_with_group> List_selected_vars
+        public ObservableCollection<Variable_with_group> List_selected_vars
         {
             get
             {
@@ -188,12 +189,9 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
             }
             set
             {
-                var tmp = list_selected_vars;
-                list_selected_vars = null;
-                list_selected_vars = tmp;
-                OnPropertyChanged();
             }
         }
+       
         public Variable_with_group Variable_item
         {
             get { return curr_variable; }
@@ -207,8 +205,6 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
                     //   OnPropertyChanged(list_selected_vars.GetType().Name);
                 }
                 else;//данная переменная уже в списке присутсвует
-                List_selected_vars = null;
-               OnPropertyChanged();
             }
         }
 
