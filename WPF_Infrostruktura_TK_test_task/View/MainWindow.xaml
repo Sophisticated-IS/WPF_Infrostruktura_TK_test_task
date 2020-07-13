@@ -29,7 +29,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MaxHeight="300"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -66,26 +65,77 @@
                 <Grid Grid.Column="1"  Margin="0,0,3,0">
                     <TextBox Text="{Binding FilterDescription, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" MaxHeight="200"/>
                 </Grid>
-
+           
             </Grid>
 
         </Grid>
 
         <Grid Grid.Row="1">
- 
-            <DataGrid Background="#FFE8D28F" SelectionUnit="FullRow" FontSize="16"  EnableRowVirtualization="True" ScrollViewer.IsDeferredScrollingEnabled="True" 
-                      ItemsSource="{Binding Items}" SelectedIndex="{Binding Index}" AutoGenerateColumns="False"
-                      IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" SelectionMode="Extended">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Группа" Binding="{Binding Group,IsAsync=True,Mode=OneWay,FallbackValue=Loading...}"/>
-                    <DataGridTextColumn Header="Переменная" Binding="{Binding Name,IsAsync=True,Mode=OneWay,FallbackValue=Loading...}"/>
-                    <DataGridTextColumn Header="Описание" Binding="{Binding Description,IsAsync=True,Mode=OneWay,FallbackValue=Loading...}"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <DataGrid Background="#FFE8D28F" SelectionUnit="FullRow" FontSize="16"  EnableRowVirtualization="True" ScrollViewer.IsDeferredScrollingEnabled="True" 
+                      ItemsSource="{Binding Items}" SelectedItem="{Binding Variable_item}" AutoGenerateColumns="False"
+                      IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
+                      AlternatingRowBackground="LightGray" AlternationCount="2">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Группа" Binding="{Binding Group,IsAsync=True,Mode=OneWay,FallbackValue=Loading...}"/>
+                        <DataGridTextColumn Header="Переменная" Binding="{Binding Name,IsAsync=True,Mode=OneWay,FallbackValue=Loading...}"/>
+                        <DataGridTextColumn Header="Описание" Binding="{Binding Description,IsAsync=True,Mode=OneWay,FallbackValue=Loading...}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
 
-        <Grid Grid.Row="2">
-            <Button Command="{Binding Click_send_vars}" Content="SEND VARIABLES to DB!!!" FontWeight="Black" Width="150" Height="30" Background="Orange"/>
+            <Grid Grid.Column="1" MaxWidth="250">
+                <Expander  ExpandDirection="Left" IsExpanded="True" BorderThickness="3">
+                    <Expander.Header>
+                        <Label Content="Выбранные переменные" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Beige"  FontSize="20" FontWeight="Bold" Foreground="Black">
+                            <Label.LayoutTransform>
+                                <RotateTransform Angle="90"/>
+                            </Label.LayoutTransform>
+                        </Label>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Button Command="{Binding Click_send_vars}" Content="SEND" FontWeight="Black" Width="150" Height="30" BorderThickness="0">
+                                <Button.Background>
+                                    <RadialGradientBrush>
+                                        <GradientStop Color="#FFD7E4F2" Offset="0.821"/>
+                                        <GradientStop Color="White"/>
+                                        <GradientStop Color="#FEDF9837" Offset="0.608"/>
+                                    </RadialGradientBrush>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <ListView Background="AliceBlue" BorderThickness="0" ItemsSource="{Binding List_selected_vars,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Button MinWidth="10" BorderThickness="0" Command="{Binding Click_remove_var_from_list}" Background="Transparent">
+                                                <Button.Content>
+                                                    <Image   Source="/Resources/arrow_left_double.ico" />
+                                                </Button.Content>
+                                            </Button>-->
+                                            <Label Content="{Binding Group,Mode=OneWay }"/>
+                                            <Label Content="{Binding Name,Mode=OneWay }"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+                    </Grid>
+                </Expander>
+            </Grid>
+
         </Grid>
     </Grid>
 </Window>

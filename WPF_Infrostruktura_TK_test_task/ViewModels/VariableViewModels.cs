@@ -8,11 +8,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using WPF_Infrostruktura_TK_test_task.Models;
 using WPF_Infrostruktura_TK_test_task.View;
+
 
 namespace WPF_Infrostruktura_TK_test_task.ViewModels
 {
@@ -73,7 +75,7 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
         {
             var action_FilterDescription = new Action(() =>
                 {
-                    Thread.Sleep(300);//TODO эмпирическая задержка между нажатиями по клаве
+                    Thread.Sleep(300);//TODO эмпирическая задержка между ожиданием нажатиям по клавиатуре
                     d.Dispatcher.Invoke(() =>
                     {
                         if (d is VariableViewModels current)
@@ -166,40 +168,75 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
 
 
         //public string Selected_Indexes { get; set; }
-       
-            public event PropertyChangedEventHandler PropertyChanged;
 
-            public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+
+        private Variable_with_group curr_variable;
+
+        private List<Variable_with_group> list_selected_vars = new List<Variable_with_group>();
+
+        public List<Variable_with_group> List_selected_vars
+        {
+            get
             {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-
+                return list_selected_vars;
             }
-
-            private int index;
-
-            public int Index
+            set
             {
-                get { return index; }
-                set
+                var tmp = list_selected_vars;
+                list_selected_vars = null;
+                list_selected_vars = tmp;
+                OnPropertyChanged();
+            }
+        }
+        public Variable_with_group Variable_item
+        {
+            get { return curr_variable; }
+            set
+            {
+                curr_variable = value;
+
+                if (!list_selected_vars.Contains(value))
                 {
-                    index = value;
-                    OnPropertyChanged();
+                    list_selected_vars.Add(value);
+                    //   OnPropertyChanged(list_selected_vars.GetType().Name);
                 }
-
+                else;//данная переменная уже в списке присутсвует
+                List_selected_vars = null;
+               OnPropertyChanged();
             }
+        }
 
-            public ICommand Click_send_vars
+        public ICommand Click_send_vars
+        {
+            get
             {
-                get
+                return new DelegateCommand((obj) =>
                 {
-                    return new DelegateCommand((obj) =>
-                    {
-                        MessageBox.Show(index.ToString());
-                    });
-                }
+                    MessageBox.Show($"{Variable_item.Group} - {Variable_item.Name} ");
+                });
             }
-            
+        }
+
+
+
+
+        public ICommand Click_remove_var_from_list
+        {
+            get
+            {
+                return new DelegateCommand((obj) =>
+                {
+                    MessageBox.Show($"NOT implemented remove!");
+                });
+            }
         }
     }
+}
 
-   
+
