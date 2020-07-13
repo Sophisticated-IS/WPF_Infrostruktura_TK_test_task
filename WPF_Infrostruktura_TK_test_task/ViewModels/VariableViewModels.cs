@@ -83,7 +83,7 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
                         {
                             if (token.IsCancellationRequested)
                             {
-                                throw new OperationCanceledException(token);
+                               throw new OperationCanceledException(token);
                             }
                             else
                             {
@@ -187,26 +187,24 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
             {
                 return list_selected_vars;
             }
-            set
-            {
-            }
+   
         }
        
-        public Variable_with_group Variable_item
+        public Variable_with_group Selected_Variable
         {
             get { return curr_variable; }
             set
             {
                 curr_variable = value;
 
-                if (!list_selected_vars.Contains(value))
+                if (!list_selected_vars.Contains(value) && value!= null)
                 {
                     list_selected_vars.Add(value);
-                    //   OnPropertyChanged(list_selected_vars.GetType().Name);
                 }
                 else;//данная переменная уже в списке присутсвует
             }
         }
+        public  int Selected_Variable_Index { get; set; }
 
         public ICommand Click_send_vars
         {
@@ -214,13 +212,25 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
             {
                 return new DelegateCommand((obj) =>
                 {
-                    MessageBox.Show($"{Variable_item.Group} - {Variable_item.Name} ");
+                    string all_vars = "";
+                    string no_vars_msg = "Нечего отправлять в БД, выберите пожалуйста переменные из таблицы!";
+                    foreach (var item in list_selected_vars)
+                    {
+                        all_vars += $"{item.Group} - {item.Name}\n";//TODO: надо ли выводить описание (Message box не справляется с такой длинной строкой)?
+                    }
+                    
+                    if (string.IsNullOrEmpty(all_vars))
+                    {
+                        MessageBox.Show(no_vars_msg);
+                    }
+                    else
+                    {
+                        MessageBox.Show(all_vars);
+                    }
+                    
                 });
             }
         }
-
-
-
 
         public ICommand Click_remove_var_from_list
         {
@@ -228,7 +238,10 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
             {
                 return new DelegateCommand((obj) =>
                 {
-                    MessageBox.Show($"NOT implemented remove!");
+                    if (list_selected_vars.Count > 0 && Selected_Variable_Index >= 0)
+                    {
+                        list_selected_vars.RemoveAt(Selected_Variable_Index);
+                    }
                 });
             }
         }

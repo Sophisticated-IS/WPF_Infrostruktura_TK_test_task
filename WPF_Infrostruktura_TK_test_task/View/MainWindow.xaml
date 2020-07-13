@@ -63,7 +63,7 @@
                 </Grid>
 
                 <Grid Grid.Column="1"  Margin="0,0,3,0">
-                    <TextBox Text="{Binding FilterDescription, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" MaxHeight="200"/>
+                    <TextBox Text="{Binding FilterDescription, UpdateSourceTrigger=PropertyChanged}" Padding="0,8,0,0" TextWrapping="Wrap" MaxHeight="200"/>
                 </Grid>
            
             </Grid>
@@ -77,7 +77,7 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <DataGrid Background="#FFE8D28F" SelectionUnit="FullRow" FontSize="16"  EnableRowVirtualization="True" ScrollViewer.IsDeferredScrollingEnabled="True" 
-                      ItemsSource="{Binding Items}" SelectedItem="{Binding Variable_item}" AutoGenerateColumns="False"
+                      ItemsSource="{Binding Items}" SelectedItem="{Binding Selected_Variable}" AutoGenerateColumns="False"
                       IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
                       AlternatingRowBackground="LightGray" AlternationCount="2">
                     <DataGrid.Columns>
@@ -88,7 +88,7 @@
                 </DataGrid>
             </Grid>
 
-            <Grid Grid.Column="1" MaxWidth="250">
+            <Grid Grid.Column="1" MaxWidth="300">
                 <Expander  ExpandDirection="Left" IsExpanded="True" BorderThickness="3">
                     <Expander.Header>
                         <Label Content="Выбранные переменные" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Beige"  FontSize="20" FontWeight="Bold" Foreground="Black">
@@ -103,25 +103,30 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0">
-                            <Button Command="{Binding Click_send_vars}" Background="Transparent" FontWeight="Black" Width="150" Height="30" BorderThickness="0">
-                                <Button.Content>
-                                    <Image Source="download_database.ico" />
-                                </Button.Content>
-                            </Button>
+                        <Grid Grid.Row="0" MinWidth="150">
+                            <DockPanel LastChildFill="True">
+                                <Button HorizontalAlignment="Left" DockPanel.Dock="Left" Command="{Binding Click_remove_var_from_list}" MinWidth="10" BorderThickness="0"  Background="DarkRed">
+                                    <Button.Content>
+                                        <Image MaxHeight="30" Source="arrow_left_double.ico"/>
+                                    </Button.Content>
+                                </Button>
+                                <Button Command="{Binding Click_send_vars}" Background="LightGray" FontWeight="Black"  HorizontalAlignment="Stretch" MaxHeight="40" BorderThickness="0">
+                                    <Button.Content>
+                                        <Image Source="download_database.ico" />
+                                    </Button.Content>
+                                </Button>
+                            </DockPanel>
                         </Grid>
 
                         <Grid Grid.Row="1">
-                            <ListView Background="AliceBlue" BorderThickness="0" ItemsSource="{Binding List_selected_vars}">
+                            <ListView Background="AliceBlue" BorderThickness="0" 
+                                      ItemsSource="{Binding List_selected_vars}" SelectedIndex="{Binding Selected_Variable_Index}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button MinWidth="10" BorderThickness="0"  Background="Transparent">
-                                                <Button.Content>
-                                                    <Image    MaxHeight="20" Source="arrow_left_double.ico"/>
-                                                </Button.Content>
-                                            </Button>
+    
                                             <Label Content="{Binding Group,Mode=OneWay }"/>
+                                            <Label Content="▶" Foreground="Green"/>
                                             <Label Content="{Binding Name,Mode=OneWay }"/>
                                         </StackPanel>
                                     </DataTemplate>
