@@ -68,10 +68,12 @@
                 </Grid>
 
                 <Grid Grid.Column="2">
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="🔎CaseSensitive?"/>
-                        <CheckBox IsChecked="{Binding IsSearchCaseSensitive}" VerticalAlignment="center" HorizontalAlignment="Right"/>
-                    </StackPanel>
+                    <Border BorderThickness="3" BorderBrush="Orange">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="🔎CaseSensitive?"/>
+                            <CheckBox IsChecked="{Binding IsSearchCaseSensitive}" VerticalAlignment="center" HorizontalAlignment="Right"/>
+                        </StackPanel>
+                    </Border>
                 </Grid>
             </Grid>
 
@@ -112,12 +114,14 @@
 
                         <Grid Grid.Row="0" MinWidth="150">
                             <DockPanel LastChildFill="True">
-                                <Button HorizontalAlignment="Left" DockPanel.Dock="Left" Command="{Binding Click_remove_var_from_list}" MinWidth="10" BorderThickness="0"  Background="DarkRed">
+                                <Button HorizontalAlignment="Left" DockPanel.Dock="Left" Command="{Binding Click_remove_var_from_list}" 
+                                        MinWidth="10" BorderThickness="0"  Background="DarkRed" ToolTip="Удалить из списка выбранную переменную ">
                                     <Button.Content>
                                         <Image MaxHeight="30" Source="arrow_left_double.ico"/>
                                     </Button.Content>
                                 </Button>
-                                <Button Command="{Binding Click_send_vars}" Background="LightGray" FontWeight="Black"  HorizontalAlignment="Stretch" MaxHeight="40" BorderThickness="0">
+                                <Button Command="{Binding Click_send_vars}" Background="LightGray" FontWeight="Black"  HorizontalAlignment="Stretch" 
+                                        MaxHeight="40" BorderThickness="0" ToolTip="Отправить выбранный переменные в БД">
                                     <Button.Content>
                                         <Image Source="download_database.ico" />
                                     </Button.Content>
