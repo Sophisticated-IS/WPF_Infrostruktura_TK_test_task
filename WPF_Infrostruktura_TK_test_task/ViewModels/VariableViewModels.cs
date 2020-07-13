@@ -71,7 +71,16 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
                             else
                             {
                                 current.Items.Filter = null;
-                                current.Items.Filter = current.FilterVariables_by_Description;
+
+                                if (current.IsSearchCaseSensitive)
+                                {
+                                    current.Items.Filter = current.FilterVariables_by_Description_case_sensetive;
+                                }
+                                else
+                                {
+                                    current.Items.Filter = current.FilterVariables_by_Description_non_case_sensetive;
+                                }
+                               
                             }
                         }
                     }, DispatcherPriority.Normal);
@@ -118,14 +127,25 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
         public VariableViewModels()
         {
             Items = CollectionViewSource.GetDefaultView(Variable.GetVariables());
-            Items.Filter = FilterVariables_by_Description;
+            Items.Filter = FilterVariables_by_Description_case_sensetive;
         }
 
-        private bool FilterVariables_by_Description(object obj)
+        private bool FilterVariables_by_Description_case_sensetive(object obj)
         {
             //Убраны проверки на string.IsNullOrEmpty и   obj is Variable_with_group для оптимизации
             var current_var_with_gr = obj as Variable_with_group;
-            return current_var_with_gr.Description.Contains(FilterDescription)&& current_var_with_gr.Name.Contains(FilterName) && current_var_with_gr.Group.Contains(FilterGroup);
+            return  current_var_with_gr.Name.Contains(FilterName)   && 
+                    current_var_with_gr.Group.Contains(FilterGroup) && 
+                    current_var_with_gr.Description.Contains(FilterDescription);
+        }
+
+        private bool FilterVariables_by_Description_non_case_sensetive(object obj)
+        {
+            //Убраны проверки на string.IsNullOrEmpty и   obj is Variable_with_group для оптимизации
+            var current_var_with_gr = obj as Variable_with_group;
+            return Contains_non_case_sensetive(current_var_with_gr.Group, FilterGroup) &&
+                   Contains_non_case_sensetive(current_var_with_gr.Name, FilterName)   &&
+                   Contains_non_case_sensetive(current_var_with_gr.Description, FilterDescription);
         }
 
         /// <summary>
@@ -141,9 +161,9 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
 
         private Variable_with_group curr_variable;//текущая переменная выбранная в datagrid
 
-        public ObservableCollection<Variable_with_group> List_selected_vars { get; } = new ObservableCollection<Variable_with_group>();
+        public ObservableCollection<Variable_with_group> List_selected_vars { get; } = new ObservableCollection<Variable_with_group>();//список переменных,выбранных пользователем для отправки
 
-        public Variable_with_group Selected_Variable
+        public Variable_with_group Selected_Variable//текущая выбранная переменная в datagrid
         {
             get { return curr_variable; }
             set
@@ -157,8 +177,8 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
                 else;//данная переменная уже в списке присутсвует
             }
         }
-        public int Selected_Variable_Index { get; set; }
-
+        public int Selected_Variable_Index { get; set; }//индекс переменной в коллекции выбранных переменных для отправки
+        public bool IsSearchCaseSensitive { get; set; }//чувствителен ли поиск к регистру?
         public ICommand Click_send_vars
         {
             get

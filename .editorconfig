@@ -2,3 +2,6 @@
 
 # IDE0052: Remove unread private members
 dotnet_diagnostic.IDE0052.severity = suggestion
+
+# CS0642: Possible mistaken empty statement
+dotnet_diagnostic.CS0642.severity = suggestion
