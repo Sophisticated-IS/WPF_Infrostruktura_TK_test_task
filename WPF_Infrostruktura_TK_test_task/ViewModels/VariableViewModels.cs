@@ -19,7 +19,7 @@ using WPF_Infrostruktura_TK_test_task.View;
 
 namespace WPF_Infrostruktura_TK_test_task.ViewModels
 {
-    class VariableViewModels : DependencyObject, INotifyPropertyChanged
+    class VariableViewModels : DependencyObject
     {
 
         public string FilterGroup
@@ -30,15 +30,7 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
 
         // Using a DependencyProperty as the backing store for FilterVariables.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FilterTextProperty =
-            DependencyProperty.Register("FilterGroup", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterGroup_Changed));
-        private static void FilterGroup_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is VariableViewModels current)
-            {
-                current.Items.Filter = null;
-                current.Items.Filter = current.FilterVariables_by_Group;
-            }
-        }
+            DependencyProperty.Register("FilterGroup", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterVariable_Changed));
 
         public string FilterName
         {
@@ -48,16 +40,7 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
 
         // Using a DependencyProperty as the backing store for FilterName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FilterNameProperty =
-            DependencyProperty.Register("FilterName", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterName_Changed));
-
-        private static void FilterName_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is VariableViewModels current)
-            {
-                current.Items.Filter = null;
-                current.Items.Filter = current.FilterVariables_by_Name;
-            }
-        }
+            DependencyProperty.Register("FilterName", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterVariable_Changed));
 
         public string FilterDescription
         {
@@ -67,12 +50,12 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
 
         // Using a DependencyProperty as the backing store for FilterDescription.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FilterDescriptionProperty =
-            DependencyProperty.Register("FilterDescription", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterDescription_Changed));
+            DependencyProperty.Register("FilterDescription", typeof(string), typeof(VariableViewModels), new PropertyMetadata("", FilterVariable_Changed));
 
         private static CancellationTokenSource token_source;
         private static CancellationToken token;
         private static Task task_FilterDescription;
-        private async static void FilterDescription_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private async static void FilterVariable_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var action_FilterDescription = new Action(() =>
                 {
@@ -135,25 +118,14 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
         public VariableViewModels()
         {
             Items = CollectionViewSource.GetDefaultView(Variable.GetVariables());
-            Items.Filter = FilterVariables_by_Group;
+            Items.Filter = FilterVariables_by_Description;
         }
-        private bool FilterVariables_by_Group(object obj)
-        {
-            //Убраны проверки на string.IsNullOrEmpty и   obj is Variable_with_group для оптимизации
-            var current_var_with_gr = obj as Variable_with_group;
-            return current_var_with_gr.Group.Contains(FilterGroup);
-        }
-        private bool FilterVariables_by_Name(object obj)
-        {
-            //Убраны проверки на string.IsNullOrEmpty и   obj is Variable_with_group для оптимизации
-            var current_var_with_gr = obj as Variable_with_group;
-            return current_var_with_gr.Name.Contains(FilterName);
-        }
+
         private bool FilterVariables_by_Description(object obj)
         {
             //Убраны проверки на string.IsNullOrEmpty и   obj is Variable_with_group для оптимизации
             var current_var_with_gr = obj as Variable_with_group;
-            return current_var_with_gr.Description.Contains(FilterDescription);
+            return current_var_with_gr.Description.Contains(FilterDescription)&& current_var_with_gr.Name.Contains(FilterName) && current_var_with_gr.Group.Contains(FilterGroup);
         }
 
         /// <summary>
@@ -165,13 +137,6 @@ namespace WPF_Infrostruktura_TK_test_task.ViewModels
         private bool Contains_non_case_sensetive(string source_str, string pattern)
         {
             return source_str?.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
         private Variable_with_group curr_variable;//текущая переменная выбранная в datagrid

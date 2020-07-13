@@ -55,7 +55,7 @@ namespace WPF_Infrostruktura_TK_test_task.Models
                     new GroupsList { group_name ="Houses",list_variables = Houses}
                 };
 
-            const int max_groups_number = 100;
+            const int max_groups_number = 20;
             const int max_vars_in_group = 1000;
             const int max_description_length = 3000;
             const int max_var_length = 30;
